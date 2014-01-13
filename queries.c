@@ -1599,6 +1599,9 @@ void print_chat_info (struct chat *C) {
   for (i = 0; i < C->user_list_size; i++) {
     printf ("\t\t");
     print_user_name (MK_USER (C->user_list[i].user_id), user_chat_get (MK_USER (C->user_list[i].user_id)));
+    push_color (COLOR_RED);
+    printf (" [%d]", C->user_list[i].user_id);
+    pop_color ();
     printf (" invited by ");
     print_user_name (MK_USER (C->user_list[i].inviter_id), user_chat_get (MK_USER (C->user_list[i].inviter_id)));
     printf (" at ");
