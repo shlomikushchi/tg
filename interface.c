@@ -234,6 +234,9 @@ char *get_default_prompt (void) {
       l += tsnprintf (buf + l, 999 - l, "%lld%%Down", 100 * cur_downloaded_bytes / cur_downloading_bytes);
     }
     l += tsnprintf (buf + l, 999 - l, "]" COLOR_NORMAL);
+    if (unread_messages) {
+      l += tsnprintf (buf + l, 999, -l, "\n")
+    }
     return buf;
   } 
   l += tsnprintf (buf + l, 999 - l, "%s", default_prompt);
