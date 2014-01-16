@@ -17,7 +17,10 @@
     Copyright Vitaly Valtman 2013
 */
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
+
 #define _GNU_SOURCE 
 
 #include <assert.h>
@@ -678,7 +681,7 @@ void interpreter (char *line UU) {
       printf ("Empty file name\n");
       RET;
     }
-    do_send_photo (CODE_input_media_uploaded_photo, id, strndup (s, t));
+    do_send_photo (CODE_input_media_uploaded_photo, id, tstrndup (s, t));
   } else if (IS_WORD("send_video")) {
     GET_PEER;
     int t;
@@ -687,7 +690,7 @@ void interpreter (char *line UU) {
       printf ("Empty file name\n");
       RET;
     }
-    do_send_photo (CODE_input_media_uploaded_video, id, strndup (s, t));
+    do_send_photo (CODE_input_media_uploaded_video, id, tstrndup (s, t));
   } else if (IS_WORD ("send_text")) {
     GET_PEER;
     int t;
@@ -696,7 +699,7 @@ void interpreter (char *line UU) {
       printf ("Empty file name\n");
       RET;
     }
-    do_send_text (id, strndup (s, t));
+    do_send_text (id, tstrndup (s, t));
   } else if (IS_WORD ("fwd")) {
     GET_PEER;
     int num = next_token_int ();
@@ -953,7 +956,7 @@ void interpreter (char *line UU) {
       printf ("Empty file name\n");
       RET;
     }
-    do_send_photo (CODE_input_media_uploaded_audio, id, strndup (s, t));
+    do_send_photo (CODE_input_media_uploaded_audio, id, tstrndup (s, t));
   } else if (IS_WORD("send_document")) {
     GET_PEER;
     int t;
@@ -962,7 +965,7 @@ void interpreter (char *line UU) {
       printf ("Empty file name\n");
       RET;
     }
-    do_send_photo (CODE_input_media_uploaded_document, id, strndup (s, t));
+    do_send_photo (CODE_input_media_uploaded_document, id, tstrndup (s, t));
   } else if (IS_WORD ("load_audio")) {
     long long num = next_token_int ();
     if (num == NOT_FOUND) {
