@@ -938,7 +938,7 @@ void work_update (struct connection *c UU, long long msg_id UU) {
         print_start ();
         push_color (COLOR_YELLOW);
         print_date (time (0));
-        printf (" User ");
+        printf (" {user_status} User ");
         print_user_name (id, U);
         printf (" is typing....\n");
         pop_color ();
@@ -956,7 +956,7 @@ void work_update (struct connection *c UU, long long msg_id UU) {
         print_start ();
         push_color (COLOR_YELLOW);
         print_date (time (0));
-        printf (" User ");
+        printf (" {user_status} User ");
         print_user_name (id, U);
         printf (" is typing in chat ");
         print_chat_name (chat_id, C);
@@ -976,7 +976,7 @@ void work_update (struct connection *c UU, long long msg_id UU) {
           print_start ();
           push_color (COLOR_YELLOW);
           print_date (time (0));
-          printf (" User ");
+          printf (" {user_status} User ");
           print_user_name (user_id, U);
           printf (" is now ");
           printf ("%s\n", (U->user.status.online > 0) ? "online" : "offline");
@@ -1003,7 +1003,7 @@ void work_update (struct connection *c UU, long long msg_id UU) {
         print_start ();
         push_color (COLOR_YELLOW);
         print_date (time (0));
-        printf (" User ");
+        printf (" {user_status} User ");
         print_user_name (user_id, UC);
         printf (" changed name to ");
         print_user_name (user_id, UC);
@@ -1044,7 +1044,7 @@ void work_update (struct connection *c UU, long long msg_id UU) {
         print_start ();
         push_color (COLOR_YELLOW);
         print_date (time (0));
-        printf (" User ");
+        printf (" {user_status} User ");
         print_user_name (user_id, UC);
         printf (" updated profile photo\n");
         pop_color ();
