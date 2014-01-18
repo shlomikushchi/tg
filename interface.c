@@ -1422,6 +1422,9 @@ void print_message (struct message *M) {
       }
       print_date (M->date);
       pop_color ();
+      if (M->media.type != CODE_message_media_empty) {
+        print_media (&M->media);
+      }
       printf (" {print_message} ");
       print_user_name (M->to_id, user_chat_get (M->to_id));
       push_color (COLOR_GREEN);
@@ -1437,6 +1440,9 @@ void print_message (struct message *M) {
       }
       print_date (M->date);
       pop_color ();
+      if (M->media.type != CODE_message_media_empty) {
+        print_media (&M->media);
+      }
       printf (" {print_message} ");
       print_user_name (M->from_id, user_chat_get (M->from_id));
       push_color (COLOR_BLUE);
@@ -1455,6 +1461,9 @@ void print_message (struct message *M) {
         printf ("%lld ", M->id);
       }
       print_date (M->date);
+      if (M->media.type != CODE_message_media_empty) {
+        print_media (&M->media);
+      }
       printf (" {print_message} ");
       push_color (COLOR_CYAN);
       printf (" %s", P->print_name);
@@ -1470,6 +1479,9 @@ void print_message (struct message *M) {
         printf ("%lld ", M->id);
       }
       print_date (M->date);
+      if (M->media.type != CODE_message_media_empty) {
+        print_media (&M->media);
+      }
       printf (" {print_message} ");
       push_color (COLOR_CYAN);
       printf (" %s", P->print_name);
@@ -1489,6 +1501,9 @@ void print_message (struct message *M) {
     }
     print_date (M->date);
     pop_color ();
+    if (M->media.type != CODE_message_media_empty) {
+      print_media (&M->media);
+    }
     printf (" {print_message} ");
     print_chat_name (M->to_id, user_chat_get (M->to_id));
     printf (" ");
