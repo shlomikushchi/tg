@@ -974,7 +974,7 @@ void interpreter (char *line UU) {
     }
     struct message *M = message_get (num);
     if (M && !M->service && M->media.type == (int)CODE_message_media_audio) {
-      do_load_video (&M->media.video, 1);
+      do_load_audio (&M->media.video, 1);
     } else if (M && !M->service && M->media.type == (int)CODE_decrypted_message_media_audio) {
       do_load_encr_video (&M->media.encr_video, 1);
     } else {
@@ -989,7 +989,7 @@ void interpreter (char *line UU) {
     }
     struct message *M = message_get (num);
     if (M && !M->service && M->media.type == (int)CODE_message_media_audio) {
-      do_load_video (&M->media.video, 2);
+      do_load_audio (&M->media.video, 2);
     } else if (M && !M->service && M->media.type == (int)CODE_decrypted_message_media_audio) {
       do_load_encr_video (&M->media.encr_video, 2);
     } else {
