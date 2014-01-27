@@ -1327,6 +1327,7 @@ void fetch_geo_message (struct message *M) {
     fetch_message_action (&M->action);
   } else {
     M->message = fetch_str_dup ();
+    M->message_len = strlen (M->message);
     fetch_message_media (&M->media);
   }
 }
@@ -1375,6 +1376,7 @@ int decrypt_encrypted_message (struct secret_chat *E) {
   AES_KEY aes_key;
   AES_set_decrypt_key (key, 256, &aes_key);
   AES_ige_encrypt ((void *)decr_ptr, (void *)decr_ptr, 4 * (decr_end - decr_ptr), &aes_key, iv, 0);
+  memset (&aes_key, 0, sizeof (aes_key));
 
   int x = *(decr_ptr);
   if (x < 0 || (x & 3)) {
@@ -1691,7 +1693,7 @@ void free_message_action (struct message_action *M) {
 
 void free_message (struct message *M) {
   if (!M->service) {
-    if (M->message) { tfree_str (M->message); }
+    if (M->message) { tfree (M->message, M->message_len + 1); }
     free_message_media (&M->media);
   } else {
     free_message_action (&M->action);
