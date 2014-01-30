@@ -17,11 +17,11 @@ Clone GitHub Repository
 or download and extract zip
 
     $ wget https://github.com/vysheng/tg/archive/master.zip -O tg-master.zip
-    $ tar xzf tg-master.zip && cd tg-master
+    $ unzip tg-master.zip && cd tg-master
     
 #### Linux
 
-Install libs: readline openssl and (if you want to use config) libconfig and lublua.
+Install libs: readline openssl and (if you want to use config) libconfig and liblua.
 If you do not want to use them pass options --disable-libconfig and --disable-liblua respectively
 On ubuntu use: 
     
