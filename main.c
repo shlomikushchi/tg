@@ -38,7 +38,10 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <fcntl.h>
+
+#ifdef HAVE_EXECINFO_H
 #include <execinfo.h>
+#endif
 #include <signal.h>
 #ifdef ENABLE_LIBCONFIG
 #include <libconfig.h>
@@ -355,12 +358,13 @@ FILE *log_net_f;
 
 int register_mode;
 int disable_auto_accept;
+int wait_dialog_list;
 
 char *lua_file;
 
 void args_parse (int argc, char **argv) {
   int opt = 0;
-  while ((opt = getopt (argc, argv, "u:hk:vn:Nc:p:l:RfBL:Es:")) != -1) {
+  while ((opt = getopt (argc, argv, "u:hk:vn:Nc:p:l:RfBL:Es:wW")) != -1) {
     switch (opt) {
     case 'u':
       set_default_username (optarg);
@@ -410,6 +414,9 @@ void args_parse (int argc, char **argv) {
     case 's':
       lua_file = tstrdup (optarg);
       break;
+    case 'W':
+      wait_dialog_list = 1;
+      break;
     case 'h':
     default:
       usage ();
@@ -418,23 +425,39 @@ void args_parse (int argc, char **argv) {
   }
 }
 
+#ifdef HAVE_EXECINFO_H
 void print_backtrace (void) {
   void *buffer[255];
   const int calls = backtrace (buffer, sizeof (buffer) / sizeof (void *));
   backtrace_symbols_fd (buffer, calls, 1);
 }
+#else
+void print_backtrace (void) {
+  write (1, "No libexec. Backtrace disabled\n", 32);
+}
+#endif
 
-void sig_handler (int signum) {
+void sig_segv_handler (int signum __attribute__ ((unused))) {
   set_terminal_attributes ();
-  printf ("Signal %d received\n", signum);
+  if (write (1, "SIGSEGV received\n", 18) < 0) { 
+    // Sad thing
+  }
   print_backtrace ();
-  exit(EXIT_FAILURE);
+  exit (EXIT_FAILURE);
 }
 
+void sig_abrt_handler (int signum __attribute__ ((unused))) {
+  set_terminal_attributes ();
+  if (write (1, "SIGABRT received\n", 18) < 0) { 
+    // Sad thing
+  }
+  print_backtrace ();
+  exit (EXIT_FAILURE);
+}
 
 int main (int argc, char **argv) {
-  signal (SIGSEGV, sig_handler);
-  signal (SIGABRT, sig_handler);
+  signal (SIGSEGV, sig_segv_handler);
+  signal (SIGABRT, sig_abrt_handler);
 
   log_level = 10;
   

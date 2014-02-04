@@ -840,10 +840,14 @@ void work_update_binlog (void) {
         struct user *U = &UC->user;
         if (U->first_name) { tfree_str (U->first_name); }
         if (U->last_name) { tfree_str (U->last_name); }
-        if (U->print_name) { tfree_str (U->print_name); }
+        if (U->print_name) { 
+          peer_delete_name (UC);
+          tfree_str (U->print_name); 
+        }
         U->first_name = fetch_str_dup ();
         U->last_name = fetch_str_dup ();
         U->print_name = create_print_name (U->id, U->first_name, U->last_name, 0, 0);
+        peer_insert_name ((void *)U);
       } else {
         fetch_skip_str ();
         fetch_skip_str ();
@@ -1711,7 +1715,7 @@ int rpc_execute (struct connection *c, int op, int len) {
     logprintf ( "have %d Response bytes\n", Response_len);
   }
 
-#if !defined(__MACH__) && !defined(__FreeBSD__)
+#if !defined(__MACH__) && !defined(__FreeBSD__) && !defined (__CYGWIN__)
   setsockopt (c->fd, IPPROTO_TCP, TCP_QUICKACK, (int[]){0}, 4);
 #endif
   int o = c_state;
@@ -1719,19 +1723,19 @@ int rpc_execute (struct connection *c, int op, int len) {
   switch (o) {
   case st_reqpq_sent:
     process_respq_answer (c, Response/* + 8*/, Response_len/* - 12*/);
-#if !defined(__MACH__) && !defined(__FreeBSD__)
+#if !defined(__MACH__) && !defined(__FreeBSD__) && !defined (__CYGWIN__)
     setsockopt (c->fd, IPPROTO_TCP, TCP_QUICKACK, (int[]){0}, 4);
 #endif
     return 0;
   case st_reqdh_sent:
     process_dh_answer (c, Response/* + 8*/, Response_len/* - 12*/);
-#if !defined(__MACH__) && !defined(__FreeBSD__)
+#if !defined(__MACH__) && !defined(__FreeBSD__) && !defined (__CYGWIN__)
     setsockopt (c->fd, IPPROTO_TCP, TCP_QUICKACK, (int[]){0}, 4);
 #endif
     return 0;
   case st_client_dh_sent:
     process_auth_complete (c, Response/* + 8*/, Response_len/* - 12*/);
-#if !defined(__MACH__) && !defined(__FreeBSD__)
+#if !defined(__MACH__) && !defined(__FreeBSD__) && !defined (__CYGWIN__)
     setsockopt (c->fd, IPPROTO_TCP, TCP_QUICKACK, (int[]){0}, 4);
 #endif
     return 0;
@@ -1741,7 +1745,7 @@ int rpc_execute (struct connection *c, int op, int len) {
     } else {
       process_rpc_message (c, (void *)(Response/* + 8*/), Response_len/* - 12*/);
     }
-#if !defined(__MACH__) && !defined(__FreeBSD__)
+#if !defined(__MACH__) && !defined(__FreeBSD__) && !defined (__CYGWIN__)
     setsockopt (c->fd, IPPROTO_TCP, TCP_QUICKACK, (int[]){0}, 4);
 #endif
     return 0;
@@ -1769,7 +1773,7 @@ int tc_becomes_ready (struct connection *c) {
   assert (write_out (c, &byte, 1) == 1);
   flush_out (c);
   
-#if !defined(__MACH__) && !defined(__FreeBSD__)
+#if !defined(__MACH__) && !defined(__FreeBSD__) && !defined (__CYGWIN__)
   setsockopt (c->fd, IPPROTO_TCP, TCP_QUICKACK, (int[]){0}, 4);
 #endif
   int o = c_state;

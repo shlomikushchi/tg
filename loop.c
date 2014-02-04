@@ -326,6 +326,7 @@ extern int peer_num;
 extern int encr_root;
 extern unsigned char *encr_prime;
 extern int encr_param_version;
+extern int dialog_list_got;
 
 void read_secret_chat_file (void) {
   if (binlog_enabled) { return; }
@@ -355,6 +356,7 @@ void read_secret_chat_file (void) {
     P->print_name = talloc (t + 1);
     assert (read (fd, P->print_name, t) == t);
     P->print_name[t] = 0;
+    peer_insert_name (P);
 
     assert (read (fd, &E->state, 4) == 4);
     assert (read (fd, &E->user_id, 4) == 4);
@@ -442,11 +444,16 @@ int mcs (void) {
 
 extern int difference_got;
 int dgot (void) {
-  return !difference_got;
+  return difference_got;
+}
+int dlgot (void) {
+  return dialog_list_got;
 }
 
 int readline_active;
 int new_dc_num;
+int wait_dialog_list;
+
 int loop (void) {
   on_start ();
   if (binlog_enabled) {
@@ -597,6 +604,10 @@ int loop (void) {
 
 
   do_get_dialog_list ();
+  if (wait_dialog_list) {
+    dialog_list_got = 0;
+    net_loop (0, dlgot);
+  }
 
   return main_loop ();
 }
